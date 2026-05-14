@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"d:\\\\Downloads\\\\Calixia\\\\2. Calixia App\")",
+      "Bash(dir \"D:\\\\Downloads\\\\Calixia\\\\1. Claude Calixia\\\\01_Branding\\\\logos\")",
+      "Bash(dir /B \"D:\\\\Downloads\\\\Calixia\\\\1. Claude Calixia\\\\01_Branding\")",
+      "Read(//d/Downloads/Calixia/1. Claude Calixia/01_Branding/**)",
+      "Bash(npm --version)",
+      "Bash(npx --version)",
+      "Bash(mkdir \"d:\\\\Downloads\\\\Calixia\\\\2. Calixia App\\\\public\\\\brand\")",
+      "Bash(mkdir \"d:\\\\Downloads\\\\Calixia\\\\2. Calixia App\\\\app\")",
+      "Bash(mkdir \"d:\\\\Downloads\\\\Calixia\\\\2. Calixia App\\\\components\")",
+      "Bash(mkdir \"d:\\\\Downloads\\\\Calixia\\\\2. Calixia App\\\\components\\\\ui\")",
+      "Bash(mkdir \"d:\\\\Downloads\\\\Calixia\\\\2. Calixia App\\\\lib\")",
+      "PowerShell($root = \"D:\\\\Downloads\\\\Calixia\\\\2. Calixia App\"; $dirs = @\\(\"public\\\\brand\",\"app\\\\login\",\"app\\\\auth\\\\callback\",\"app\\\\\\(client\\)\\\\today\",\"app\\\\\\(client\\)\\\\calendar\",\"app\\\\\\(client\\)\\\\workout\\\\[id]\",\"app\\\\\\(client\\)\\\\nutrition\\\\history\",\"app\\\\\\(client\\)\\\\messages\",\"app\\\\\\(client\\)\\\\profile\",\"app\\\\\\(admin\\)\\\\admin\",\"app\\\\\\(admin\\)\\\\admin\\\\clients\\\\new\",\"app\\\\\\(admin\\)\\\\admin\\\\clients\\\\[id]\\\\calendar\",\"app\\\\\\(admin\\)\\\\admin\\\\templates\\\\new\",\"app\\\\\\(admin\\)\\\\admin\\\\templates\\\\[id]\",\"app\\\\\\(admin\\)\\\\admin\\\\messages\\\\[clientId]\",\"app\\\\api\\\\realtime\",\"components\\\\ui\",\"components\\\\client\",\"components\\\\admin\",\"lib\\\\supabase\",\"supabase\\\\migrations\",\"scripts\",\"types\"\\); foreach \\($d in $dirs\\) { New-Item -ItemType Directory -Force -Path \\(Join-Path $root $d\\) | Out-Null }; Write-Output \"ok\")",
+      "Bash(npm install *)",
+      "Bash(npx next *)",
+      "Bash(rm -f \"d:/Downloads/Calixia/2. Calixia App/.env.local\" /tmp/devboot.log /tmp/login.html ; ls \"d:/Downloads/Calixia/2. Calixia App/\" | head -30)",
+      "PowerShell(git init -b main; git add .; Write-Output \"---STAGED FILES \\(first 30\\)---\"; git diff --cached --name-only | Select-Object -First 30; Write-Output \"---SECRETS CHECK \\(should be empty\\)---\"; git diff --cached --name-only | Select-String -Pattern \"\\\\.env\" -CaseSensitive:$false; Write-Output \"---TOTAL FILES STAGED---\"; \\(git diff --cached --name-only | Measure-Object -Line\\).Lines)"
+    ],
+    "additionalDirectories": [
+      "D:\\Downloads\\Calixia\\1. Claude Calixia\\01_Branding\\logos",
+      "D:\\Downloads\\Calixia\\1. Claude Calixia\\01_Branding\\hero_images",
+      "\\tmp"
+    ]
+  }
+}

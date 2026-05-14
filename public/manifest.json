@@ -1,0 +1,24 @@
+{
+  "name": "Calixia Coach",
+  "short_name": "Calixia",
+  "description": "Calisthenics · Xtended · Intelligent · Assistant",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F1419",
+  "theme_color": "#0F1419",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/brand/calixia_square.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/brand/calixia_square.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
