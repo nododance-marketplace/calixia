@@ -9,6 +9,17 @@ const nextConfig = {
       },
     ],
   },
+  webpack: (config, { nextRuntime, webpack }) => {
+    if (nextRuntime === "edge") {
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          __dirname: JSON.stringify("/"),
+          __filename: JSON.stringify("/index.js"),
+        }),
+      );
+    }
+    return config;
+  },
 };
 
 module.exports = nextConfig;
