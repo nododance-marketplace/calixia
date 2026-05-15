@@ -16,6 +16,11 @@ const nextConfig = {
           __dirname: JSON.stringify("/"),
           __filename: JSON.stringify("/index.js"),
         }),
+        new webpack.BannerPlugin({
+          banner: "var __dirname='/';var __filename='/index.js';",
+          raw: true,
+          entryOnly: false,
+        }),
       );
     }
     return config;
