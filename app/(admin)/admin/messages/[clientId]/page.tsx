@@ -6,9 +6,15 @@ import { MessageThread } from "@/components/message-thread";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminThreadPage({ params }: { params: { clientId: string } }) {
+export default async function AdminThreadPage({
+  params,
+}: {
+  params: { clientId: string };
+}) {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return null;
 
   const { data: client } = await supabase
@@ -28,16 +34,18 @@ export default async function AdminThreadPage({ params }: { params: { clientId: 
     .order("created_at", { ascending: true });
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-3">
+    <div className="space-y-3 pb-2 animate-fade-in">
+      <div className="flex items-center gap-3 pt-1">
         <Link
           href="/admin/messages"
-          className="rounded-full p-2 text-text-secondary hover:bg-surface hover:text-text-primary"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-surface/60 text-text-secondary transition-colors hover:border-border-strong hover:text-text-primary"
           aria-label="Back"
         >
           <ArrowLeft className="h-4 w-4" />
         </Link>
-        <p className="text-xs uppercase tracking-wider text-text-secondary">Conversation</p>
+        <p className="text-[10px] uppercase tracking-[0.22em] text-text-muted">
+          Conversation
+        </p>
       </div>
       <MessageThread
         meId={user.id}

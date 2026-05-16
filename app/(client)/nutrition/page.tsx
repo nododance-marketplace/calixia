@@ -7,7 +7,9 @@ export const dynamic = "force-dynamic";
 
 export default async function NutritionPage() {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return null;
 
   const today = formatDateIso(new Date());
@@ -15,7 +17,9 @@ export default async function NutritionPage() {
   const [{ data: profile }, { data: meals }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("daily_calorie_target,daily_protein_target_g,daily_carbs_target_g,daily_fat_target_g")
+      .select(
+        "daily_calorie_target,daily_protein_target_g,daily_carbs_target_g,daily_fat_target_g",
+      )
       .eq("id", user.id)
       .single(),
     supabase
@@ -27,14 +31,21 @@ export default async function NutritionPage() {
   ]);
 
   return (
-    <div className="space-y-5">
-      <div className="flex items-baseline justify-between">
+    <div className="space-y-6 pb-2 animate-fade-in">
+      <div className="flex items-end justify-between pt-2 animate-slide-up">
         <div>
-          <p className="text-xs uppercase tracking-wider text-text-secondary">Today</p>
-          <h1 className="mt-1 text-2xl text-text-primary">Nutrition</h1>
+          <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-text-muted">
+            Today
+          </p>
+          <h1 className="mt-2 font-display text-display-md text-text-primary">
+            Nutrition
+          </h1>
         </div>
-        <Link href="/nutrition/history" className="text-xs text-accent">
-          History
+        <Link
+          href="/nutrition/history"
+          className="text-[10px] uppercase tracking-[0.18em] text-accent transition-colors hover:text-accent-hover"
+        >
+          History →
         </Link>
       </div>
 

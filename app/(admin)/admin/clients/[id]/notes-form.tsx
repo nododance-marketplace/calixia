@@ -21,7 +21,10 @@ export function TrainerNotesForm({
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(async () => {
       const supabase = createClient();
-      await supabase.from("profiles").update({ trainer_notes: value }).eq("id", clientId);
+      await supabase
+        .from("profiles")
+        .update({ trainer_notes: value })
+        .eq("id", clientId);
       setStatus("saved");
       setTimeout(() => setStatus("idle"), 1500);
     }, 600);
@@ -39,8 +42,20 @@ export function TrainerNotesForm({
         rows={10}
         placeholder="Private notes — only you can see these."
       />
-      <p className="mt-2 text-[11px] text-text-secondary">
-        {status === "saving" ? "Saving…" : status === "saved" ? "Saved." : "Autosaves as you type."}
+      <p className="mt-2 inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em]">
+        {status === "saving" ? (
+          <>
+            <span className="inline-block h-1.5 w-1.5 animate-pulse-soft rounded-full bg-accent" />
+            <span className="text-accent">Saving…</span>
+          </>
+        ) : status === "saved" ? (
+          <>
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-success" />
+            <span className="text-success">Saved</span>
+          </>
+        ) : (
+          <span className="text-text-muted">Autosaves as you type</span>
+        )}
       </p>
     </div>
   );

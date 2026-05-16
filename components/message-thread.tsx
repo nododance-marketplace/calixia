@@ -29,7 +29,6 @@ export function MessageThread({
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [messages.length]);
 
-  // Mark inbound messages as read
   useEffect(() => {
     const unreadIds = messages
       .filter((m) => m.recipient_id === meId && !m.read_at)
@@ -41,7 +40,6 @@ export function MessageThread({
       .in("id", unreadIds);
   }, [messages, meId, supabase]);
 
-  // Realtime subscription
   useEffect(() => {
     const channel = supabase
       .channel(`messages-${meId}-${partnerId}`)
@@ -58,7 +56,9 @@ export function MessageThread({
             (m.sender_id === meId && m.recipient_id === partnerId) ||
             (m.sender_id === partnerId && m.recipient_id === meId);
           if (!involvesUs) return;
-          setMessages((prev) => (prev.find((x) => x.id === m.id) ? prev : [...prev, m]));
+          setMessages((prev) =>
+            prev.find((x) => x.id === m.id) ? prev : [...prev, m],
+          );
         },
       )
       .subscribe();
@@ -97,15 +97,28 @@ export function MessageThread({
   }
 
   return (
-    <div className="flex h-[calc(100dvh-8rem)] flex-col md:h-[calc(100dvh-3rem)]">
-      <div className="border-b border-border px-4 py-3">
-        <p className="text-xs uppercase tracking-wide text-text-secondary">Conversation</p>
-        <p className="text-sm text-text-primary">{partnerName}</p>
+    <div className="flex h-[calc(100dvh-10rem)] flex-col md:h-[calc(100dvh-3rem)] animate-fade-in">
+      <div className="flex items-center gap-3 border-b border-border/60 px-1 pb-4 pt-1">
+        <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-accent/12 font-mono-num text-sm text-accent ring-1 ring-inset ring-accent/25">
+          {partnerName?.[0]?.toUpperCase() ?? "?"}
+        </div>
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.22em] text-text-muted">
+            Conversation
+          </p>
+          <p className="font-display text-base text-text-primary">
+            {partnerName}
+          </p>
+        </div>
       </div>
-      <div ref={scrollRef} className="flex-1 space-y-2 overflow-y-auto p-4">
+
+      <div
+        ref={scrollRef}
+        className="flex-1 space-y-3 overflow-y-auto py-4"
+      >
         {messages.length === 0 ? (
-          <p className="py-12 text-center text-sm text-text-secondary">
-            No messages yet. Say hello.
+          <p className="py-16 text-center text-xs uppercase tracking-[0.18em] text-text-muted">
+            No messages yet · Say hello
           </p>
         ) : (
           messages.map((m) => {
@@ -113,21 +126,24 @@ export function MessageThread({
             return (
               <div
                 key={m.id}
-                className={cn("flex w-full", mine ? "justify-end" : "justify-start")}
+                className={cn(
+                  "flex w-full animate-slide-up",
+                  mine ? "justify-end" : "justify-start",
+                )}
               >
                 <div
                   className={cn(
-                    "max-w-[80%] rounded-2xl px-3.5 py-2 text-sm",
+                    "max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-sm",
                     mine
-                      ? "bg-accent text-[#0F1419]"
-                      : "bg-surface text-text-primary border border-border",
+                      ? "bg-accent-gradient text-[#0A0E13] shadow-glow-sm"
+                      : "border border-border bg-surface/70 text-text-primary backdrop-blur-sm",
                   )}
                 >
                   <p className="whitespace-pre-wrap break-words">{m.body}</p>
                   <p
                     className={cn(
-                      "mt-1 text-[10px]",
-                      mine ? "text-[#0F1419]/60" : "text-text-secondary",
+                      "mt-1 font-mono-num text-[10px]",
+                      mine ? "text-[#0A0E13]/60" : "text-text-muted",
                     )}
                   >
                     {timeAgo(m.created_at)}
@@ -138,7 +154,8 @@ export function MessageThread({
           })
         )}
       </div>
-      <div className="flex items-end gap-2 border-t border-border bg-background p-3">
+
+      <div className="flex items-end gap-2 border-t border-border/60 bg-background/60 py-3 backdrop-blur-sm">
         <Textarea
           value={body}
           onChange={(e) => setBody(e.target.value)}

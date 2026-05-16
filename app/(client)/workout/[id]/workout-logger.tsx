@@ -12,7 +12,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/toast";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import type { ExerciseLog, ScheduledExercise, ScheduledWorkout } from "@/types/database.types";
+import type {
+  ExerciseLog,
+  ScheduledExercise,
+  ScheduledWorkout,
+} from "@/types/database.types";
 
 type LogMap = Record<string, Record<number, ExerciseLog>>;
 
@@ -45,7 +49,11 @@ export function WorkoutLogger({
   const [showComment, setShowComment] = useState(!!workout.client_comment);
   const [status, setStatus] = useState(workout.status);
 
-  async function saveLog(exerciseId: string, setNumber: number, patch: Partial<ExerciseLog>) {
+  async function saveLog(
+    exerciseId: string,
+    setNumber: number,
+    patch: Partial<ExerciseLog>,
+  ) {
     const existing = logs[exerciseId]?.[setNumber];
     const next: ExerciseLog = {
       id: existing?.id ?? `tmp-${exerciseId}-${setNumber}`,
@@ -78,13 +86,20 @@ export function WorkoutLogger({
       .single();
 
     if (error) {
-      toast({ title: "Couldn't save set.", description: error.message, variant: "danger" });
+      toast({
+        title: "Couldn't save set.",
+        description: error.message,
+        variant: "danger",
+      });
       return;
     }
     if (data) {
       setLogs((prev) => ({
         ...prev,
-        [exerciseId]: { ...prev[exerciseId], [setNumber]: data as ExerciseLog },
+        [exerciseId]: {
+          ...prev[exerciseId],
+          [setNumber]: data as ExerciseLog,
+        },
       }));
     }
   }
@@ -101,12 +116,19 @@ export function WorkoutLogger({
         })
         .eq("id", workout.id);
       if (error) {
-        toast({ title: "Couldn't update workout.", description: error.message, variant: "danger" });
+        toast({
+          title: "Couldn't update workout.",
+          description: error.message,
+          variant: "danger",
+        });
         return;
       }
       setStatus(newStatus);
       toast({
-        title: newStatus === "completed" ? "Workout complete." : "Workout marked skipped.",
+        title:
+          newStatus === "completed"
+            ? "Workout complete."
+            : "Workout marked skipped.",
         variant: newStatus === "completed" ? "success" : "default",
       });
       router.push("/today");
@@ -115,22 +137,30 @@ export function WorkoutLogger({
   }
 
   return (
-    <div className="space-y-4 pb-40">
-      <div className="flex items-center gap-3">
+    <div className="space-y-5 pb-48 animate-fade-in">
+      <div className="flex items-center gap-3 pt-1 animate-slide-up">
         <Link
           href="/today"
-          className="rounded-full p-2 text-text-secondary hover:bg-surface hover:text-text-primary"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-surface/60 text-text-secondary transition-colors hover:border-border-strong hover:text-text-primary"
           aria-label="Back"
         >
           <ArrowLeft className="h-4 w-4" />
         </Link>
-        <div className="flex-1">
-          <p className="text-xs uppercase tracking-wider text-text-secondary">Workout</p>
-          <h1 className="text-xl text-text-primary">{workout.name}</h1>
+        <div className="min-w-0 flex-1">
+          <p className="text-[10px] uppercase tracking-[0.22em] text-text-muted">
+            Workout
+          </p>
+          <h1 className="font-display text-display-md text-text-primary truncate">
+            {workout.name}
+          </h1>
         </div>
         <Badge
           variant={
-            status === "completed" ? "success" : status === "skipped" ? "danger" : "muted"
+            status === "completed"
+              ? "success"
+              : status === "skipped"
+                ? "danger"
+                : "accent"
           }
         >
           {status}
@@ -143,7 +173,9 @@ export function WorkoutLogger({
 
       <div className="space-y-4">
         {exercises.length === 0 ? (
-          <p className="text-sm text-text-secondary">No exercises in this workout.</p>
+          <p className="text-sm text-text-secondary">
+            No exercises in this workout.
+          </p>
         ) : (
           exercises.map((ex, idx) => (
             <ExerciseRow
@@ -157,16 +189,17 @@ export function WorkoutLogger({
         )}
       </div>
 
-      <div className="fixed inset-x-0 bottom-[64px] z-30 border-t border-border bg-background/95 backdrop-blur md:bottom-0">
-        <div className="mx-auto flex max-w-2xl flex-col gap-3 p-4">
+      {/* Sticky action bar */}
+      <div className="fixed inset-x-0 bottom-[88px] z-30 px-3 md:bottom-3">
+        <div className="glass-strong mx-auto flex max-w-2xl flex-col gap-3 rounded-3xl p-4 shadow-elevated">
           <div className="flex items-center justify-between">
-            <p className="text-xs uppercase tracking-wide text-text-secondary">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-text-muted">
               How hard was it?
             </p>
             <button
               type="button"
               onClick={() => setShowComment((v) => !v)}
-              className="flex items-center gap-1 text-xs text-text-secondary hover:text-text-primary"
+              className="inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.16em] text-text-secondary transition-colors hover:text-text-primary"
             >
               Add a note
               {showComment ? (
@@ -184,14 +217,14 @@ export function WorkoutLogger({
                 aria-label={`Rate ${n}`}
                 onClick={() => setRating(rating === n ? null : n)}
                 className={cn(
-                  "rounded-full p-1.5 transition-colors",
+                  "rounded-full p-1.5 transition-all",
                   rating && n <= rating
-                    ? "text-accent"
-                    : "text-text-secondary hover:text-text-primary",
+                    ? "text-accent drop-shadow-[0_0_8px_rgba(95,246,240,0.5)]"
+                    : "text-text-muted hover:text-text-secondary",
                 )}
               >
                 <Star
-                  className="h-6 w-6"
+                  className="h-7 w-7"
                   strokeWidth={1.5}
                   fill={rating && n <= rating ? "currentColor" : "none"}
                 />
@@ -212,10 +245,14 @@ export function WorkoutLogger({
               onClick={() => finish("skipped")}
               disabled={pending}
             >
-              Mark skipped
+              Skip
             </Button>
-            <Button onClick={() => finish("completed")} disabled={pending}>
-              Mark complete
+            <Button
+              onClick={() => finish("completed")}
+              disabled={pending}
+              size="lg"
+            >
+              Complete
             </Button>
           </div>
         </div>
@@ -233,64 +270,63 @@ function ExerciseRow({
   exercise: ScheduledExercise;
   index: number;
   logs: Record<number, ExerciseLog>;
-  onChange: (exerciseId: string, setNumber: number, patch: Partial<ExerciseLog>) => Promise<void>;
+  onChange: (
+    exerciseId: string,
+    setNumber: number,
+    patch: Partial<ExerciseLog>,
+  ) => Promise<void>;
 }) {
   const setCount = useMemo(() => {
-    if (exercise.prescribed_sets && exercise.prescribed_sets > 0) return exercise.prescribed_sets;
+    if (exercise.prescribed_sets && exercise.prescribed_sets > 0)
+      return exercise.prescribed_sets;
     return 3;
   }, [exercise.prescribed_sets]);
 
   return (
-    <Card>
-      <div className="mb-3 flex items-start justify-between gap-3">
-        <div>
-          <p className="text-xs uppercase tracking-wide text-text-secondary">Exercise {index}</p>
-          <p className="text-text-primary">{exercise.name}</p>
+    <Card className="animate-slide-up">
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="font-mono-num text-[10px] uppercase tracking-[0.22em] text-text-muted">
+            Movement / {String(index).padStart(2, "0")}
+          </p>
+          <p className="mt-1 font-display text-lg text-text-primary truncate">
+            {exercise.name}
+          </p>
         </div>
         {exercise.video_url ? (
           <a
             href={exercise.video_url}
             target="_blank"
             rel="noreferrer"
-            className="rounded-full p-2 text-accent hover:bg-accent/10"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-accent/30 bg-accent/10 text-accent transition-all hover:border-accent/60 hover:shadow-glow-sm"
             aria-label="Video demo"
           >
-            <Video className="h-4 w-4" />
+            <Video className="h-4 w-4" strokeWidth={1.5} />
           </a>
         ) : null}
       </div>
 
-      <div className="grid grid-cols-2 gap-2 text-xs text-text-secondary md:grid-cols-4">
-        <div>
-          <p className="text-[10px] uppercase">Sets × Reps</p>
-          <p className="text-text-primary">
-            {exercise.prescribed_sets ?? "—"} × {exercise.prescribed_reps ?? "—"}
-          </p>
-        </div>
-        <div>
-          <p className="text-[10px] uppercase">Load</p>
-          <p className="text-text-primary">{exercise.prescribed_load ?? "—"}</p>
-        </div>
-        <div>
-          <p className="text-[10px] uppercase">Rest</p>
-          <p className="text-text-primary">
-            {exercise.rest_seconds ? `${exercise.rest_seconds}s` : "—"}
-          </p>
-        </div>
-        <div>
-          <p className="text-[10px] uppercase">Tempo</p>
-          <p className="text-text-primary">{exercise.tempo ?? "—"}</p>
-        </div>
+      <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+        <Stat
+          label="Sets × Reps"
+          value={`${exercise.prescribed_sets ?? "—"} × ${exercise.prescribed_reps ?? "—"}`}
+        />
+        <Stat label="Load" value={exercise.prescribed_load ?? "—"} />
+        <Stat
+          label="Rest"
+          value={exercise.rest_seconds ? `${exercise.rest_seconds}s` : "—"}
+        />
+        <Stat label="Tempo" value={exercise.tempo ?? "—"} />
       </div>
 
       {exercise.notes ? (
-        <p className="mt-3 rounded-2xl border border-border bg-background/40 p-3 text-xs text-text-secondary">
+        <p className="mt-3 rounded-2xl border border-border bg-surface-2/40 p-3 text-xs text-text-secondary">
           {exercise.notes}
         </p>
       ) : null}
 
-      <div className="mt-4 space-y-2">
-        <div className="grid grid-cols-[2rem_1fr_1fr] items-center gap-2 text-[10px] uppercase tracking-wide text-text-secondary">
+      <div className="mt-5 space-y-2">
+        <div className="grid grid-cols-[2.5rem_1fr_1fr] items-center gap-2 px-2 text-[10px] font-medium uppercase tracking-[0.18em] text-text-muted">
           <span>Set</span>
           <span>Reps</span>
           <span>Load</span>
@@ -309,6 +345,17 @@ function ExerciseRow({
   );
 }
 
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-border bg-surface-2/40 px-3 py-2">
+      <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-text-muted">
+        {label}
+      </p>
+      <p className="mt-0.5 font-mono-num text-sm text-text-primary">{value}</p>
+    </div>
+  );
+}
+
 function SetRow({
   exerciseId,
   setNumber,
@@ -318,14 +365,37 @@ function SetRow({
   exerciseId: string;
   setNumber: number;
   value?: ExerciseLog;
-  onChange: (exerciseId: string, setNumber: number, patch: Partial<ExerciseLog>) => Promise<void>;
+  onChange: (
+    exerciseId: string,
+    setNumber: number,
+    patch: Partial<ExerciseLog>,
+  ) => Promise<void>;
 }) {
-  const [reps, setReps] = useState<string>(value?.completed_reps?.toString() ?? "");
+  const [reps, setReps] = useState<string>(
+    value?.completed_reps?.toString() ?? "",
+  );
   const [load, setLoad] = useState<string>(value?.completed_load ?? "");
+  const completed = !!(value?.completed_reps || value?.completed_load);
 
   return (
-    <div className="grid grid-cols-[2rem_1fr_1fr] items-center gap-2">
-      <span className="text-xs text-text-secondary">#{setNumber}</span>
+    <div
+      className={cn(
+        "grid grid-cols-[2.5rem_1fr_1fr] items-center gap-2 rounded-2xl border px-2 py-1.5 transition-colors",
+        completed
+          ? "border-accent/25 bg-accent/5"
+          : "border-transparent",
+      )}
+    >
+      <span
+        className={cn(
+          "inline-flex h-7 w-7 items-center justify-center rounded-full font-mono-num text-xs",
+          completed
+            ? "bg-accent/15 text-accent ring-1 ring-inset ring-accent/30"
+            : "bg-surface-2/60 text-text-muted ring-1 ring-inset ring-border",
+        )}
+      >
+        {setNumber}
+      </span>
       <Input
         type="number"
         inputMode="numeric"
@@ -338,7 +408,7 @@ function SetRow({
             void onChange(exerciseId, setNumber, { completed_reps: num });
           }
         }}
-        className="h-9 px-3"
+        className="h-10 px-3 font-mono-num text-center"
       />
       <Input
         type="text"
@@ -351,7 +421,7 @@ function SetRow({
             void onChange(exerciseId, setNumber, { completed_load: v });
           }
         }}
-        className="h-9 px-3"
+        className="h-10 px-3 font-mono-num text-center"
       />
     </div>
   );

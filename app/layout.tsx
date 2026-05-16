@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Outfit, JetBrains_Mono } from "next/font/google";
 import { ToastProvider } from "@/components/ui/toast";
 import "./globals.css";
 
@@ -7,6 +7,21 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   weight: ["300", "400", "500", "600"],
+  variable: "--font-inter",
+});
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["200", "300", "400", "500", "600"],
+  variable: "--font-outfit",
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500"],
+  variable: "--font-jetbrains",
 });
 
 export const metadata: Metadata = {
@@ -25,7 +40,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0F1419",
+  themeColor: "#0A0E13",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -34,8 +49,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`dark ${inter.className}`}>
-      <body className="min-h-dvh bg-background text-text-primary">
+    <html
+      lang="en"
+      className={`dark ${inter.variable} ${outfit.variable} ${jetbrains.variable}`}
+    >
+      <body className="min-h-dvh bg-background font-sans text-text-primary">
         <ToastProvider>{children}</ToastProvider>
       </body>
     </html>

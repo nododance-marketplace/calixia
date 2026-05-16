@@ -9,7 +9,9 @@ export const dynamic = "force-dynamic";
 
 export default async function NutritionHistoryPage() {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return null;
 
   const today = new Date();
@@ -44,42 +46,62 @@ export default async function NutritionHistoryPage() {
   });
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-3">
+    <div className="space-y-5 pb-2 animate-fade-in">
+      <div className="flex items-center gap-3 pt-1 animate-slide-up">
         <Link
           href="/nutrition"
-          className="rounded-full p-2 text-text-secondary hover:bg-surface hover:text-text-primary"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-surface/60 text-text-secondary transition-colors hover:border-border-strong hover:text-text-primary"
           aria-label="Back"
         >
           <ArrowLeft className="h-4 w-4" />
         </Link>
-        <h1 className="text-xl text-text-primary">Last 14 days</h1>
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.22em] text-text-muted">
+            History
+          </p>
+          <h1 className="font-display text-display-md text-text-primary">
+            Last 14 days
+          </h1>
+        </div>
       </div>
 
       <div className="space-y-2">
-        {days.map(({ d, iso, t }) => {
+        {days.map(({ d, iso, t }, i) => {
           const calOk =
-            profile?.daily_calorie_target && t.calories >= profile.daily_calorie_target * 0.9;
+            profile?.daily_calorie_target &&
+            t.calories >= profile.daily_calorie_target * 0.9;
           const proOk =
-            profile?.daily_protein_target_g && t.protein >= profile.daily_protein_target_g * 0.9;
+            profile?.daily_protein_target_g &&
+            t.protein >= profile.daily_protein_target_g * 0.9;
           return (
-            <Card key={iso} className="p-4">
+            <Card
+              key={iso}
+              className="animate-slide-up p-4"
+              style={{ animationDelay: `${i * 25}ms` } as React.CSSProperties}
+            >
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-text-primary">{format(d, "EEE, MMM d")}</p>
-                  <p className="text-xs text-text-secondary">
-                    {t.calories} kcal · {t.protein}g protein
-                  </p>
+                <div className="flex items-baseline gap-3">
+                  <span className="font-mono-num text-xl text-text-primary">
+                    {format(d, "d")}
+                  </span>
+                  <div>
+                    <p className="text-sm text-text-primary">
+                      {format(d, "EEE")}
+                    </p>
+                    <p className="font-mono-num text-[11px] text-text-muted">
+                      {t.calories} kcal · {t.protein}g
+                    </p>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-2">
                   {calOk ? (
-                    <span className="flex items-center gap-1 text-xs text-success">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-success/25 bg-success/12 px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-success">
                       <CheckCircle2 className="h-3 w-3" /> cal
                     </span>
                   ) : null}
                   {proOk ? (
-                    <span className="flex items-center gap-1 text-xs text-success">
-                      <CheckCircle2 className="h-3 w-3" /> protein
+                    <span className="inline-flex items-center gap-1 rounded-full border border-success/25 bg-success/12 px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-success">
+                      <CheckCircle2 className="h-3 w-3" /> pro
                     </span>
                   ) : null}
                 </div>

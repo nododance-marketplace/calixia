@@ -14,17 +14,17 @@ export const DialogContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
   <DialogPrimitive.Portal>
-    <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm animate-fade-in" />
+    <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md animate-fade-in" />
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-1/2 top-1/2 z-50 w-[92vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border bg-surface p-6 shadow-2xl animate-slide-up",
+        "glass-strong fixed left-1/2 top-1/2 z-50 w-[92vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-3xl p-6 shadow-elevated animate-slide-up",
         className,
       )}
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full p-1 text-text-secondary hover:bg-surface-2 hover:text-text-primary">
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full p-1.5 text-text-muted transition-colors hover:bg-surface-2/70 hover:text-text-primary">
         <X className="h-4 w-4" />
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
@@ -32,14 +32,36 @@ export const DialogContent = React.forwardRef<
 ));
 DialogContent.displayName = "DialogContent";
 
-export function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("mb-4", className)} {...props} />;
+export function DialogHeader({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={cn("mb-5", className)} {...props} />;
 }
 
-export function DialogTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h2 className={cn("text-lg font-light tracking-tight text-text-primary", className)} {...props} />;
+export function DialogTitle({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLHeadingElement>) {
+  return (
+    <h2
+      className={cn(
+        "font-display text-xl tracking-tight text-text-primary",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
-export function DialogDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn("mt-1 text-sm text-text-secondary", className)} {...props} />;
+export function DialogDescription({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLParagraphElement>) {
+  return (
+    <p
+      className={cn("mt-1 text-sm text-text-secondary", className)}
+      {...props}
+    />
+  );
 }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Save } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -41,7 +42,11 @@ export function MacrosForm({
       .eq("id", clientId);
     setSaving(false);
     if (error) {
-      toast({ title: "Couldn't save targets.", description: error.message, variant: "danger" });
+      toast({
+        title: "Couldn't save targets.",
+        description: error.message,
+        variant: "danger",
+      });
       return;
     }
     toast({ title: "Targets saved.", variant: "success" });
@@ -49,7 +54,7 @@ export function MacrosForm({
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="grid grid-cols-2 gap-3">
         <div>
           <Label htmlFor="daily_calorie_target">Calories</Label>
@@ -57,6 +62,7 @@ export function MacrosForm({
             id="daily_calorie_target"
             type="number"
             inputMode="numeric"
+            className="font-mono-num"
             {...register("daily_calorie_target")}
           />
         </div>
@@ -66,6 +72,7 @@ export function MacrosForm({
             id="daily_protein_target_g"
             type="number"
             inputMode="numeric"
+            className="font-mono-num"
             {...register("daily_protein_target_g")}
           />
         </div>
@@ -75,6 +82,7 @@ export function MacrosForm({
             id="daily_carbs_target_g"
             type="number"
             inputMode="numeric"
+            className="font-mono-num"
             {...register("daily_carbs_target_g")}
           />
         </div>
@@ -84,11 +92,13 @@ export function MacrosForm({
             id="daily_fat_target_g"
             type="number"
             inputMode="numeric"
+            className="font-mono-num"
             {...register("daily_fat_target_g")}
           />
         </div>
       </div>
-      <Button type="submit" disabled={saving}>
+      <Button type="submit" disabled={saving} size="sm">
+        <Save className="h-3.5 w-3.5" />
         {saving ? "Saving..." : "Save targets"}
       </Button>
     </form>

@@ -10,7 +10,9 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminMessagesPage() {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return null;
 
   const { data: clients } = await supabase
@@ -37,12 +39,12 @@ export default async function AdminMessagesPage() {
           .eq("recipient_id", user.id)
           .is("read_at", null),
       ])
-    : [
-        { data: [] as any[] },
-        { data: [] as any[] },
-      ];
+    : [{ data: [] as any[] }, { data: [] as any[] }];
 
-  const lastByClient: Record<string, { body: string; created_at: string }> = {};
+  const lastByClient: Record<
+    string,
+    { body: string; created_at: string }
+  > = {};
   for (const m of lastMessages ?? []) {
     const otherId = m.sender_id === user.id ? m.recipient_id : m.sender_id;
     if (!lastByClient[otherId]) {
@@ -61,10 +63,14 @@ export default async function AdminMessagesPage() {
   });
 
   return (
-    <div className="space-y-5">
-      <div>
-        <p className="text-xs uppercase tracking-wider text-text-secondary">Trainer</p>
-        <h1 className="mt-1 text-2xl text-text-primary">Messages</h1>
+    <div className="space-y-6 pb-2 animate-fade-in">
+      <div className="pt-2 animate-slide-up">
+        <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-text-muted">
+          Trainer
+        </p>
+        <h1 className="mt-2 font-display text-display-lg text-text-primary">
+          Messages
+        </h1>
       </div>
 
       {!clients || clients.length === 0 ? (
@@ -75,30 +81,37 @@ export default async function AdminMessagesPage() {
         />
       ) : (
         <div className="space-y-2">
-          {ordered.map((c) => {
+          {ordered.map((c, i) => {
             const last = lastByClient[c.id];
             const unreadCount = unreadByClient[c.id] ?? 0;
             return (
               <Link key={c.id} href={`/admin/messages/${c.id}`}>
-                <Card className="hover:bg-surface-2">
+                <Card
+                  className="animate-slide-up transition-all hover:border-border-strong"
+                  style={
+                    { animationDelay: `${i * 25}ms` } as React.CSSProperties
+                  }
+                >
                   <div className="flex items-center gap-3">
                     {c.avatar_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={c.avatar_url}
                         alt=""
-                        className="h-10 w-10 rounded-full object-cover"
+                        className="h-11 w-11 rounded-2xl object-cover ring-1 ring-inset ring-border"
                       />
                     ) : (
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-2 text-xs text-text-secondary">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-accent/12 font-display text-sm text-accent ring-1 ring-inset ring-accent/25">
                         {initials(c.full_name ?? c.email)}
                       </div>
                     )}
-                    <div className="flex-1 min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="flex items-baseline justify-between gap-2">
-                        <p className="truncate text-text-primary">{c.full_name ?? c.email}</p>
+                        <p className="truncate text-text-primary">
+                          {c.full_name ?? c.email}
+                        </p>
                         {last ? (
-                          <span className="text-[11px] text-text-secondary">
+                          <span className="font-mono-num text-[10px] uppercase tracking-[0.14em] text-text-muted">
                             {timeAgo(last.created_at)}
                           </span>
                         ) : null}
@@ -107,7 +120,9 @@ export default async function AdminMessagesPage() {
                         {last?.body ?? "No messages yet."}
                       </p>
                     </div>
-                    {unreadCount > 0 ? <Badge variant="accent">{unreadCount}</Badge> : null}
+                    {unreadCount > 0 ? (
+                      <Badge variant="ember">{unreadCount}</Badge>
+                    ) : null}
                   </div>
                 </Card>
               </Link>

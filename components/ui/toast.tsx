@@ -1,7 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import { CheckCircle2, AlertCircle, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -34,17 +40,17 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className="pointer-events-none fixed bottom-4 left-1/2 z-[100] flex w-[92vw] max-w-sm -translate-x-1/2 flex-col gap-2">
+      <div className="pointer-events-none fixed bottom-24 left-1/2 z-[100] flex w-[92vw] max-w-sm -translate-x-1/2 flex-col gap-2 md:bottom-6">
         {toasts.map((t) => (
           <div
             key={t.id}
             className={cn(
-              "pointer-events-auto flex items-start gap-3 rounded-2xl border bg-surface p-4 shadow-2xl animate-slide-up",
+              "glass-strong pointer-events-auto flex items-start gap-3 rounded-2xl p-4 shadow-elevated animate-slide-up",
               t.variant === "success"
-                ? "border-success/40"
+                ? "ring-1 ring-inset ring-success/30"
                 : t.variant === "danger"
-                  ? "border-danger/40"
-                  : "border-border",
+                  ? "ring-1 ring-inset ring-danger/30"
+                  : "",
             )}
           >
             <div className="mt-0.5">
@@ -58,12 +64,18 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             </div>
             <div className="flex-1">
               <p className="text-sm font-medium text-text-primary">{t.title}</p>
-              {t.description ? <p className="mt-0.5 text-xs text-text-secondary">{t.description}</p> : null}
+              {t.description ? (
+                <p className="mt-0.5 text-xs text-text-secondary">
+                  {t.description}
+                </p>
+              ) : null}
             </div>
             <button
               type="button"
-              className="text-text-secondary hover:text-text-primary"
-              onClick={() => setToasts((prev) => prev.filter((x) => x.id !== t.id))}
+              className="text-text-muted transition-colors hover:text-text-primary"
+              onClick={() =>
+                setToasts((prev) => prev.filter((x) => x.id !== t.id))
+              }
             >
               <X className="h-3.5 w-3.5" />
             </button>
